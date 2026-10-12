@@ -43,7 +43,7 @@
         <p class="eyebrow"><span class="pulse-dot"></span>Expédition d'exploration &amp; d'ouverture de canyons</p>
         <h1 class="hero-title"><span class="ht-line"><span>Sri Lanka</span></span><span class="ht-line"><em>Canyon 2027</em></span></h1>
         <p class="hero-sub">30 jours · 12 objectifs · les hautes terres de l'Uva</p>
-        <p class="hero-team">Juin 2027 · Léa · Carolyne · Paul · Fred</p>
+        <p class="hero-team">Juin 2027 · Fred · Léa · Carolyne · Paul</p>
         <div class="hero-cta">
           <a href="#carte" class="btn btn-primary">Explorer la carte</a>
           <a href="#objectifs" class="btn btn-ghost">Les 12 objectifs</a>
@@ -178,10 +178,39 @@
     <div class="wrap">
       <p class="kicker">Vue d'ensemble</p>
       <h2 class="reveal-title">Les douze objectifs</h2>
+      <div class="falls reveal" id="falls">
+        <div class="falls-head">
+          <p class="falls-title">Les chutes à l'échelle</p>
+          <p class="falls-big"><span data-count="1090" data-suffix=" m">0</span> cumulés <span class="falls-vs">soit 3,3 fois la tour Eiffel</span></p>
+        </div>
+        <div class="falls-scroll"><svg id="falls-svg" viewBox="0 0 1000 500" role="img" aria-label="Hauteur des chutes principales comparée à la tour Eiffel"></svg></div>
+        <p class="falls-note">Chute principale de chaque objectif · cliquez pour ouvrir la fiche · Nalini Ella et Ella Wala : hauteur à mesurer sur place.</p>
+      </div>
       <p class="lead reveal">Cliquez sur une fiche pour le parcours envisagé, les accès, les autorisations et les points d'attention.</p>
       <div class="obj-filters" id="obj-filters"></div>
       <div class="obj-grid" id="obj-grid"></div>
       <p class="fineprint">Altitude du point repère, lue sur un modèle numérique de terrain (≈ 75 m). « ~ » : position approximative, à confirmer sur le terrain.</p>
+    </div>
+  </section>
+
+  <!-- OUVRIR UN CANYON : scène pilotée par le défilement -->
+  <section id="ouverture" class="opening">
+    <div class="op-pin">
+      <div class="wrap op-grid">
+        <div class="op-text">
+          <p class="kicker">Ouvrir un canyon</p>
+          <h2>Anatomie d'une ouverture</h2>
+          <ol class="op-steps" id="op-steps">
+            <li><b>Repérer</b><p>Reconnaissance depuis le haut et depuis la berge : la ligne, les échappatoires, le débit.</p></li>
+            <li><b>Équiper</b><p>Pose des ancrages au perforateur — goujons, plaquettes, maillons. Environ 120 points prévus sur le mois.</p></li>
+            <li><b>Descendre</b><p>Rappels fractionnés : sur un grand mur comme Diyaluma, nous cherchons des relais intermédiaires dans la paroi.</p></li>
+            <li><b>Relever</b><p>Hauteur des ressauts, débit, qualité du rocher, temps de parcours, GPS départ et arrivée.</p></li>
+            <li><b>Transmettre</b><p>Un topo détaillé par parcours, remis à un partenaire local et partagé avec la communauté.</p></li>
+          </ol>
+          <div class="op-progress"><i></i></div>
+        </div>
+        <figure class="op-fig"><svg id="op-svg" viewBox="0 0 520 640" role="img" aria-label="Schéma d'une ouverture de canyon"></svg></figure>
+      </div>
     </div>
   </section>
 
@@ -245,6 +274,20 @@
     <div class="wrap">
       <p class="kicker">En pratique</p>
       <h2 class="reveal-title">Logistique</h2>
+      <div class="trip">
+        <div class="trip-stage" data-lenis-prevent><div id="trip-map"></div></div>
+        <div class="trip-info">
+          <p class="kicker">Le trajet</p>
+          <p class="trip-km"><span id="trip-km">0</span> km</p>
+          <ol class="trip-legs" id="trip-legs">
+            <li><i class="tl-plane"></i><div><b>Paris → Colombo</b><span>Vol A/R, ≈ 700 € avec bagage matériel</span></div></li>
+            <li><i class="tl-van"></i><div><b>Colombo → hautes terres</b><span>Van avec chauffeur, 4 personnes + matériel</span></div></li>
+            <li><i class="tl-train"></i><div><b>Kandy → Ella → Badulla</b><span>Train entre les bases</span></div></li>
+          </ol>
+          <button class="btn btn-small" id="trip-replay">↺ Rejouer le trajet</button>
+          <p class="fineprint">Tracés indicatifs.</p>
+        </div>
+      </div>
       <div class="logi-grid" id="logi-grid"></div>
     </div>
   </section>

@@ -32,7 +32,7 @@ window.EXPE = {
 
   objectives: [
     {
-      n: 1, name: "Diyaluma + Upper Diyaluma", sector: "D", prio: 1, drop: "220 m", alt: "680 m", river: "Punagala Oya",
+      n: 1, short: "Diyaluma", name: "Diyaluma + Upper Diyaluma", sector: "D", prio: 1, drop: "220 m", alt: "680 m", river: "Punagala Oya",
       coord: [81.031, 6.733], approx: false, photo: "diyaluma",
       pitch: "La pièce maîtresse de l'expédition. La Punagala Oya s'étale en vasques au sommet d'un mur de granulite noire, puis plonge d'environ 190 m jusqu'au pont de la route Koslanda–Wellawaya.",
       base: "Koslanda / Haputale", duration: "1 jour (reco) + 2 jours (équipement)", permit: "Forest Department (amont, à confirmer)",
@@ -41,7 +41,7 @@ window.EXPE = {
       watch: ["Grand rappel unique à fractionner : relais intermédiaires à trouver dans le mur", "Sommet très fréquenté le week-end : sorties tôt le matin", "Kudalu Ella (20 m), sur la même rivière, à explorer en bonus"],
     },
     {
-      n: 2, name: "Gorge d'Ella (Kithal + Ravana Ella)", sector: "C", prio: 1, drop: "25 m", alt: "1310 m", river: "Kirindi Oya",
+      n: 2, short: "Gorge d'Ella", name: "Gorge d'Ella (Kithal + Ravana Ella)", sector: "C", prio: 1, drop: "25 m", alt: "1310 m", river: "Kirindi Oya",
       coord: [81.049, 6.852], approx: false, photo: "ellaGap",
       pitch: "La Kirindi Oya dévale la gorge d'Ella, qui perd 1 000 m d'altitude sur 30 km jusqu'à Wellawaya. Kithal Ella, cachée au-dessus, et Ravana Ella, en trois ressauts, en marquent les temps forts.",
       base: "Ella", duration: "2 jours", permit: "Department of Wildlife Conservation (sanctuaire de Ravana Ella)",
@@ -50,7 +50,7 @@ window.EXPE = {
       watch: ["Ravana Ella est dans un sanctuaire : autorisation écrite obligatoire", "Route A23 très fréquentée au pied de la chute", "Débit faible en juin : idéal pour l'initiation"],
     },
     {
-      n: 3, name: "Dun Ella", sector: "B", prio: 1, drop: "125 m", alt: "~460 m", river: "Affluent Loggal Oya",
+      n: 3, short: "Dun Ella", name: "Dun Ella", sector: "B", prio: 1, drop: "125 m", alt: "~460 m", river: "Affluent Loggal Oya",
       coord: [81.030, 7.085], approx: true, photo: "teaLeaves",
       pitch: "Une chute de 125 m en trois jets, peu fréquentée, loin des circuits touristiques. Son bassin versant est entièrement à l'est : la cible la plus sûre en juin côté météo.",
       base: "Badulla ou Passara", duration: "2 jours", permit: "Divisional Secretariat de Meegahakivula",
@@ -59,7 +59,7 @@ window.EXPE = {
       watch: ["La position sur Google Maps est fausse : utiliser le KMZ d'Amazing Lanka", "Bassin déboisé : débit de juin incertain", "Village isolé : prévoir l'évacuation vers Badulla"],
     },
     {
-      n: 4, name: "Kurundu Oya (Maturata Ella)", sector: "A", prio: 2, drop: "189 m", alt: "1330 m", river: "Kurundu Oya",
+      n: 4, short: "Kurundu Oya", name: "Kurundu Oya (Maturata Ella)", sector: "A", prio: 2, drop: "189 m", alt: "1330 m", river: "Kurundu Oya",
       coord: [80.850, 7.080], approx: false, photo: "teaTrain",
       pitch: "La troisième plus haute chute du pays : 189 m en deux jets séparés d'environ 20 m, sur un granite noir qui plonge dans un ravin profond rejoignant la Mahaweli.",
       base: "Walapane", duration: "2 à 3 jours", permit: "Exploitant de la centrale hydroélectrique + NWSDB",
@@ -68,7 +68,7 @@ window.EXPE = {
       watch: ["Centrale et captage d'eau potable au pied : contact obligatoire avec l'exploitant", "Source sur le flanc nord du Piduruthalagala : pluie de mousson possible en amont", "Accès 4x4 exigeant"],
     },
     {
-      n: 5, name: "Dunhinda + Kuda Dunhinda", sector: "B", prio: 2, drop: "63 m", alt: "580 m", river: "Badulu Oya",
+      n: 5, short: "Dunhinda", name: "Dunhinda + Kuda Dunhinda", sector: "B", prio: 2, drop: "63 m", alt: "580 m", river: "Badulu Oya",
       coord: [81.062, 7.018], approx: false, photo: "dunhinda",
       pitch: "La cascade la plus célèbre de l'Uva : 63 m d'un seul jet dans un nuage d'embruns, suivie de Kuda Dunhinda en aval.",
       base: "Badulla", duration: "1 jour", permit: "Pradeshiya Sabha (site payant)",
@@ -77,7 +77,7 @@ window.EXPE = {
       watch: ["Site très fréquenté et plateformes d'observation : coordination avec la collectivité", "Peu d'intérêt d'exploration, fort intérêt de visibilité"],
     },
     {
-      n: 6, name: "Bomburu Ella", sector: "C", prio: 2, drop: "90 m", alt: "1360 m", river: "Dulgala Oya",
+      n: 6, short: "Bomburu", name: "Bomburu Ella", sector: "C", prio: 2, drop: "90 m", alt: "1360 m", river: "Dulgala Oya",
       coord: [80.831, 6.947], approx: false, photo: null,
       pitch: "Une dizaine de chutes entre 1 500 et 2 000 m d'altitude. Au XIXe siècle, Samuel Baker décrivait une gorge en V terminée par un saut d'environ 90 m dans une étroiture.",
       base: "Welimada / Ella", duration: "2 jours", permit: "Forest Department (Sita Eliya Kandapola Forest Reserve)",
@@ -86,7 +86,7 @@ window.EXPE = {
       watch: ["Réserve forestière : permis obligatoire", "Noyades signalées par les villageois", "Bassin qui monte vers Nuwara Eliya : débit possiblement soutenu en juin"],
     },
     {
-      n: 7, name: "Nalini Ella (Namunukula)", sector: "B", prio: 2, drop: "à mesurer", alt: "~1220 m", river: "Massif de Namunukula",
+      n: 7, short: "Nalini", name: "Nalini Ella (Namunukula)", sector: "B", prio: 2, drop: "à mesurer", alt: "~1220 m", river: "Massif de Namunukula",
       coord: [81.120, 6.870], approx: true, photo: null,
       pitch: "Une chute du massif de Namunukula (2 035 m) si haute que l'eau n'atteint presque jamais le pied. Pas de nom officiel, pas de hauteur publiée : de l'exploration pure.",
       base: "Ella ou Passara", duration: "2 jours (reco)", permit: "À identifier",
@@ -95,7 +95,7 @@ window.EXPE = {
       watch: ["Aucune donnée fiable : tout est à vérifier", "Isolement : téléphone satellite indispensable"],
     },
     {
-      n: 8, name: "Aradunu Ella", sector: "B", prio: 3, drop: "30 m", alt: "~920 m", river: "Loggal Oya",
+      n: 8, short: "Aradunu", name: "Aradunu Ella", sector: "B", prio: 3, drop: "30 m", alt: "~920 m", river: "Loggal Oya",
       coord: [81.160, 6.930], approx: true, photo: "teaPickers",
       pitch: "Une chute de 30 m en arc sur la Loggal Oya, qui descend du Namunukula. Une légende y place la grotte où le roi Walagamba se serait caché.",
       base: "Passara", duration: "1 jour", permit: "Direction de l'El Teb Estate",
@@ -104,7 +104,7 @@ window.EXPE = {
       watch: ["Terrain privé d'estate : accord écrit de la direction"],
     },
     {
-      n: 9, name: "Andawela + Alakola Ella", sector: "A", prio: 3, drop: "40 m", alt: "~610 m", river: "Chaîne de Nayameruhinna",
+      n: 9, short: "Andawela", name: "Andawela + Alakola Ella", sector: "A", prio: 3, drop: "40 m", alt: "~610 m", river: "Chaîne de Nayameruhinna",
       coord: [80.810, 7.130], approx: true, photo: null,
       pitch: "Une chute de 40 m qui descend de la chaîne de Nayameruhinna, à coupler avec Alakola Ella (60 m, sur l'Oban Oya), dont l'emplacement exact reste à confirmer.",
       base: "Walapane ou Hanguranketha", duration: "1 à 2 jours", permit: "À identifier",
@@ -113,7 +113,7 @@ window.EXPE = {
       watch: ["Aucune photo publiée d'Alakola Ella", "Données anciennes (inventaire Kautzsch)"],
     },
     {
-      n: 10, name: "Bambarakanda + Lanka Ella", sector: "D", prio: 3, drop: "263 m", alt: "1260 m", river: "Kuda Oya",
+      n: 10, short: "Bambarakanda", name: "Bambarakanda + Lanka Ella", sector: "D", prio: 3, drop: "263 m", alt: "1260 m", river: "Kuda Oya",
       coord: [80.831, 6.773], approx: false, photo: "bambarakanda",
       pitch: "La plus haute chute du Sri Lanka : 263 m, mais un simple filet d'eau en saison sèche. Lanka Ella est à environ 1 km, et Nagadowa se voit depuis le même point.",
       base: "Haputale", duration: "1 à 2 jours", permit: "Pradeshiya Sabha (site payant)",
@@ -122,7 +122,7 @@ window.EXPE = {
       watch: ["Débit très faible en juin", "Limite sud-ouest de la zone : exposition partielle à la mousson"],
     },
     {
-      n: 11, name: "Arawakumbura Dunhinda", sector: "B", prio: 3, drop: "45 m", alt: "500 m", river: "Ibban Oya",
+      n: 11, short: "Arawakumbura", name: "Arawakumbura Dunhinda", sector: "B", prio: 3, drop: "45 m", alt: "500 m", river: "Ibban Oya",
       coord: [81.215, 7.090], approx: false, photo: null,
       pitch: "Une chute de 45 m sur l'Ibban Oya, qui garde son débit même en saison sèche. Une seconde chute, Alawaththagoda, est à 1,5 km.",
       base: "Passara", duration: "1 à 2 jours", permit: "À identifier",
@@ -131,7 +131,7 @@ window.EXPE = {
       watch: ["Pas de sentier : progression en végétation dense", "Basse altitude : faune (serpents, éléphants possibles)"],
     },
     {
-      n: 12, name: "Ella Wala", sector: "C", prio: 3, drop: "à mesurer", alt: "~300 m", river: "Bassin de Wellawaya",
+      n: 12, short: "Ella Wala", name: "Ella Wala", sector: "C", prio: 3, drop: "à mesurer", alt: "~300 m", river: "Bassin de Wellawaya",
       coord: [81.100, 6.780], approx: true, photo: null,
       pitch: "Une chute dans un amphithéâtre de blocs et de grands arbres, au pied de la gorge d'Ella.",
       base: "Ella ou Wellawaya", duration: "1 jour", permit: "À identifier",
@@ -175,10 +175,10 @@ window.EXPE = {
   ],
 
   team: [
+    { name: "Fred", role: "Guide canyoning", text: "Ouverture des lignes, pose des ancrages, rédaction des topos.", color: "#3fd0b0" },
     { name: "Léa", role: "Photographe & vidéaste", text: "Film de l'expédition, banque d'images, relevés photo pour les topos.", color: "#f6c177" },
     { name: "Carolyne", role: "Médecin", text: "Pharmacie d'expédition, protocoles de secours en canyon isolé, plan d'évacuation vers Badulla.", color: "#f08a5d" },
     { name: "Paul", role: "Logistique", text: "Transport, hébergement, permis, matériel.", color: "#4f8ef7" },
-    { name: "Fred", role: "Guide canyoning", text: "Ouverture des lignes, pose des ancrages, rédaction des topos.", color: "#3fd0b0" },
   ],
 
   budget: {

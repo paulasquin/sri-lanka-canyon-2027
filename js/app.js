@@ -45,7 +45,7 @@
   });
 
   /* ---------------- map style ---------------- */
-  const mapStyle = ({ globe = false } = {}) => ({
+  const mapStyle = ({ globe = false, terrain = true } = {}) => ({
     version: 8,
     projection: { type: globe ? "globe" : "mercator" },
     sources: {
@@ -60,7 +60,7 @@
       { id: "sat", type: "raster", source: "sat", paint: { "raster-saturation": -0.12, "raster-contrast": 0.08, "raster-brightness-max": 0.92 } },
       { id: "shade", type: "hillshade", source: "demShade", minzoom: 7, paint: { "hillshade-exaggeration": 0.35, "hillshade-shadow-color": "#000", "hillshade-highlight-color": "#fff", "hillshade-accent-color": "#000" } },
     ],
-    terrain: { source: "dem", exaggeration: 1.5 },
+    ...(terrain ? { terrain: { source: "dem", exaggeration: 1.5 } } : {}),
     sky: {
       "sky-color": "#0b1d2a", "horizon-color": "#2c4a5a", "fog-color": "#0b1418", "sky-horizon-blend": 0.6, "horizon-fog-blend": 0.6, "fog-ground-blend": 0.4,
       "atmosphere-blend": ["interpolate", ["linear"], ["zoom"], 0, 1, 5, 1, 8, 0],
@@ -464,6 +464,7 @@
           <div><span>Autorisation</span><b>${o.permit}</b></div>
           <div><span>Période</span><b>Juin (saison sèche côté Uva)</b></div>
         </div>
+        <div class="dr-block"><h4>Localisation</h4><div class="dr-map" id="dr-map"></div></div>
         <div class="dr-block"><h4>Accès</h4><p>${o.access}</p></div>
         <div class="dr-block"><h4>Parcours envisagé</h4><ol class="dr-steps">${o.route.map((x) => `<li>${x}</li>`).join("")}</ol></div>
         <div class="dr-block"><h4>Points d'attention</h4><ul class="dr-watch">${o.watch.map((x) => `<li>${x}</li>`).join("")}</ul></div>
@@ -489,6 +490,7 @@
     }
     gsap.from($$(".dr-content > *", body), { y: 30, opacity: 0, duration: 0.7, stagger: 0.05, ease: "power3.out", delay: wasOpen ? 0 : 0.2 });
     gsap.fromTo(".dr-hero", { scale: 1.12 }, { scale: 1, duration: 1.4, ease: "expo.out" });
+    miniMap(byN[n]);
     $$("[data-go]", body).forEach((b) => b.addEventListener("click", () => openDrawer(+b.dataset.go)));
     $("[data-map]", body).addEventListener("click", () => {
       closeDrawer();
@@ -498,11 +500,222 @@
   function closeDrawer() {
     if (!drawer.classList.contains("open")) return;
     gsap.to(".drawer-backdrop", { opacity: 0, duration: 0.4 });
-    gsap.to(".drawer-panel", { xPercent: 100, duration: 0.6, ease: "expo.in", onComplete: () => { drawer.classList.remove("open"); drawer.setAttribute("aria-hidden", "true"); } });
+    gsap.to(".drawer-panel", { xPercent: 100, duration: 0.6, ease: "expo.in", onComplete: () => { drawer.classList.remove("open"); drawer.setAttribute("aria-hidden", "true"); killMiniMap(); } });
     lenis.start();
   }
   drawer.addEventListener("click", (e) => e.target.closest("[data-close]") && closeDrawer());
   addEventListener("keydown", (e) => e.key === "Escape" && closeDrawer());
+
+
+  /* ---------------- les chutes à l'échelle ---------------- */
+  function renderFalls() {
+    const svg = $("#falls-svg");
+    svg.setAttribute("viewBox", "0 0 1000 545");
+    const ground = 440, top = 40, maxM = 340, sc = (ground - top) / maxM;
+    const items = D.objectives.map((o) => ({ o, m: parseInt(o.drop, 10) }))
+      .sort((a, b) => (isNaN(b.m) ? -1 : b.m) - (isNaN(a.m) ? -1 : a.m));
+    let s = `<defs><linearGradient id="fallWater" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#d4f6ff" stop-opacity=".95"/><stop offset="1" stop-color="#5fb8d6" stop-opacity=".8"/></linearGradient>
+      <filter id="mistBlur" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="4"/></filter></defs>`;
+    s += '<g class="falls-axis">' + [100, 200, 300].map((m) => `<line x1="20" x2="990" y1="${ground - m * sc}" y2="${ground - m * sc}"/><text x="990" y="${ground - m * sc - 5}" text-anchor="end">${m} m</text>`).join("") + `<line x1="20" x2="990" y1="${ground}" y2="${ground}" style="stroke:rgba(255,255,255,.2)"/></g>`;
+    // Tour Eiffel (330 m) pour l'échelle
+    const ex = 40, ew = 76, eh = 330 * sc, ey = ground - eh;
+    const P = (x, y) => `${(ex + x * ew).toFixed(1)} ${(ey + y * eh).toFixed(1)}`;
+    s += `<g class="eiffel"><path d="M${P(0.5, 0)} L${P(0.535, 0.2)} L${P(0.6, 0.5)} L${P(0.68, 0.55)} L${P(0.64, 0.6)} L${P(0.78, 0.8)} L${P(0.85, 0.83)} L${P(1, 1)} L${P(0.72, 1)} Q${P(0.5, 0.78)} ${P(0.28, 1)} L${P(0, 1)} L${P(0.15, 0.83)} L${P(0.22, 0.8)} L${P(0.36, 0.6)} L${P(0.32, 0.55)} L${P(0.4, 0.5)} L${P(0.465, 0.2)} Z"/>
+      <text x="${ex + ew / 2}" y="${ground + 22}">Tour Eiffel</text><text x="${ex + ew / 2}" y="${ground + 38}">330 m</text></g>`;
+    const x0 = 150, slot = (990 - x0) / items.length, cw = 40;
+    items.forEach(({ o, m }, i) => {
+      const x = x0 + i * slot + (slot - cw) / 2, cx = x + cw / 2, known = !isNaN(m);
+      const hgt = known ? m * sc : 60, y = ground - hgt;
+      s += `<g class="fall${known ? "" : " unknown"}" data-n="${o.n}"><title>${o.n}. ${o.name} — ${o.drop}</title><g class="fall-col">
+        <rect class="rock" x="${x}" y="${y}" width="${cw}" height="${hgt}" rx="3"/>
+        ${known ? `<rect class="water" x="${cx - 8}" y="${y}" width="16" height="${hgt}"/>
+        ${[-4, 0, 4].map((d, k) => `<line class="flow" x1="${cx + d}" x2="${cx + d}" y1="${y}" y2="${ground}" style="animation-delay:${-k * 0.23}s"/>`).join("")}
+        <ellipse class="mist" cx="${cx}" cy="${ground - 3}" rx="22" ry="8"/>` : ""}</g>
+        <text class="val" x="${cx}" y="${y - 10}">${known ? m + " m" : "?"}</text>
+        <circle cx="${cx}" cy="${ground + 18}" r="10" fill="${prioColor(o.prio)}"/><text class="num" x="${cx}" y="${ground + 18}">${o.n}</text>
+        <text class="lbl" text-anchor="end" transform="translate(${cx + 6} ${ground + 40}) rotate(-35)">${o.short}</text></g>`;
+    });
+    svg.innerHTML = s;
+    $$(".fall", svg).forEach((g) => g.addEventListener("click", () => openDrawer(+g.dataset.n)));
+    const eif = $(".eiffel path", svg), len = eif.getTotalLength();
+    gsap.set(eif, { strokeDasharray: len, strokeDashoffset: len, fillOpacity: 0 });
+    gsap.timeline({ scrollTrigger: { trigger: svg, start: "top 80%" } })
+      .to(eif, { strokeDashoffset: 0, duration: 1.6, ease: "power2.inOut" })
+      .to(eif, { fillOpacity: 1, duration: 0.6 }, "-=0.4")
+      .from(".fall-col", { scaleY: 0, transformOrigin: "50% 100%", duration: 1.3, stagger: 0.07, ease: "expo.out" }, 0.4)
+      .from(".fall .val", { opacity: 0, y: 10, duration: 0.5, stagger: 0.07 }, 0.9);
+  }
+
+  /* ---------------- anatomie d'une ouverture ---------------- */
+  function renderOpening() {
+    const svg = $("#op-svg"), RX = 316, TOP = 118, BOT = 596;
+    const relays = [TOP, 262, 412, 556];
+    const rock = "0,110 300,110 306,150 296,230 310,300 298,380 312,460 300,540 314,624 0,624";
+    const bank = "520,150 474,160 484,260 470,380 482,500 474,624 520,624";
+    let seed = 7;
+    const rnd = () => ((seed = (seed * 9301 + 49297) % 233280) / 233280);
+    // facettes de rocher (texture) et végétation
+    let facets = "";
+    for (let i = 0; i < 70; i++) {
+      const x = rnd() * 280, y = 125 + rnd() * 490, w = 18 + rnd() * 46, hh = 10 + rnd() * 30;
+      facets += `<polygon points="${x},${y} ${x + w},${y + rnd() * 8} ${x + w - rnd() * 10},${y + hh} ${x + rnd() * 8},${y + hh - rnd() * 6}" fill="rgba(255,255,255,${(0.015 + rnd() * 0.045).toFixed(3)})"/>`;
+    }
+    const tree = (x, y, sc) => `<g transform="translate(${x} ${y}) scale(${sc})"><rect x="-2" y="-18" width="4" height="18" fill="#2a3a2f"/><circle cx="0" cy="-28" r="13" fill="#1f4a35"/><circle cx="-9" cy="-20" r="9" fill="#245640"/><circle cx="9" cy="-21" r="10" fill="#1b4230"/></g>`;
+    const trees = [[24, 110, 1.3], [58, 110, 1], [86, 110, 1.2], [496, 152, 1.1], [512, 150, 0.9]].map(([x, y, k]) => tree(x, y, k)).join("");
+    const moss = [150, 228, 300, 384, 462, 540].map((y, i) => `<ellipse cx="${300 + (i % 2) * 8}" cy="${y}" rx="${7 + (i % 3) * 3}" ry="4" fill="#2f5f43" opacity=".9"/>`).join("") +
+      [200, 330, 450, 560].map((y) => `<ellipse cx="476" cy="${y}" rx="8" ry="4" fill="#2f5f43" opacity=".8"/>`).join("");
+    svg.innerHTML = `<defs>
+        <linearGradient id="opRock" x1="0" x2="1"><stop offset="0" stop-color="#121a17"/><stop offset="1" stop-color="#2c3a35"/></linearGradient>
+        <linearGradient id="opWater" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#d4f6ff" stop-opacity=".9"/><stop offset="1" stop-color="#5fb8d6" stop-opacity=".7"/></linearGradient>
+      </defs>
+      <path d="M0 150 Q 140 70 260 120 T 520 110 V 624 H0Z" fill="#0d1815"/>
+      <polygon points="${bank}" fill="url(#opRock)" opacity=".75"/>
+      <polygon points="${rock}" fill="url(#opRock)"/>
+      <g>${facets}</g>${moss}${trees}
+      ${[170, 250, 330, 410, 490, 570].map((y, i) => `<path d="M0 ${y} Q 120 ${y - 8 + (i % 2) * 14} 296 ${y + 4}" stroke="rgba(255,255,255,.05)" fill="none"/>`).join("")}
+      <path d="M0 110 H300" stroke="#3d6b4f" stroke-width="6" stroke-linecap="round"/>
+      <path d="M210 108 Q 280 104 330 112" stroke="#8fd3ea" stroke-width="5" fill="none" stroke-linecap="round" opacity=".8"/>
+      <rect x="326" y="112" width="28" height="510" fill="url(#opWater)"/>
+      ${[331, 340, 349].map((x, k) => `<line class="op-flow" x1="${x}" x2="${x}" y1="112" y2="622" style="animation-delay:${-k * 0.27}s"/>`).join("")}
+      <ellipse cx="380" cy="624" rx="130" ry="13" fill="rgba(95,184,214,.35)"/>
+      <ellipse class="op-ripple" cx="340" cy="622" rx="30" ry="5" fill="none" stroke="rgba(212,246,255,.6)"/>
+      <g id="op-team" opacity="0">${[130, 176].map((x) => `<g transform="translate(${x} 110) scale(1.35)" stroke="#e9f0ec" stroke-width="3" stroke-linecap="round"><circle cx="0" cy="-30" r="6" fill="#f6c177" stroke="none"/><line x1="0" y1="-23" x2="0" y2="-9"/><line x1="0" y1="-9" x2="-5" y2="0"/><line x1="0" y1="-9" x2="5" y2="0"/><line x1="0" y1="-19" x2="9" y2="-24"/></g>`).join("")}
+        <text class="op-lbl" x="112" y="54">Reconnaissance</text></g>
+      <path id="op-sight" d="M190 76 Q 340 160 362 600" fill="none" stroke="#f6c177" stroke-width="1.6" stroke-dasharray="5 6" opacity="0"/>
+      <line id="op-rope" x1="${RX}" y1="${TOP}" x2="${RX}" y2="${TOP}" stroke="#f6c177" stroke-width="2"/>
+      ${relays.map((y, i) => `<g class="op-anchor" id="op-a${i}" transform="translate(${RX - 6} ${y})" opacity="0"><circle r="9" fill="rgba(246,193,119,.18)"/><circle r="4.5" fill="#f6c177" stroke="#08100d" stroke-width="1.5"/>
+        ${i ? `<text class="op-lbl" x="-14" y="4" text-anchor="end">relais</text>` : `<text class="op-lbl" x="-14" y="4" text-anchor="end">ancrage de tête</text>`}</g>`).join("")}
+      <g id="op-spark" opacity="0" stroke="#fff" stroke-width="1.5">${[0, 60, 120, 180, 240, 300].map((a) => `<line x1="${RX - 6 + 8 * Math.cos(a * Math.PI / 180)}" y1="${TOP + 8 * Math.sin(a * Math.PI / 180)}" x2="${RX - 6 + 16 * Math.cos(a * Math.PI / 180)}" y2="${TOP + 16 * Math.sin(a * Math.PI / 180)}"/>`).join("")}</g>
+      <g id="op-climber" transform="translate(${RX} ${TOP})" opacity="0"><g transform="scale(1.7)" stroke="#e9f0ec" stroke-width="2.6" stroke-linecap="round" fill="none">
+        <circle cx="11" cy="-13" r="6.5" fill="#f08a5d" stroke="none"/><path d="M5 -16 a6.5 6.5 0 0 1 12 0" stroke="#f6c177" stroke-width="2"/><line x1="7" y1="-6" x2="13" y2="12"/><line x1="13" y1="12" x2="0" y2="20"/><line x1="13" y1="12" x2="3" y2="27"/><line x1="8" y1="-3" x2="1" y2="-12"/><line x1="10" y1="2" x2="2" y2="0"/><rect x="8" y="-2" width="7" height="12" rx="2" fill="#3fd0b0" stroke="none" opacity=".9"/>
+      </g></g>
+      <g id="op-measure" opacity="0">
+        <line x1="440" y1="112" x2="440" y2="620" stroke="#f6c177" stroke-width="1.5"/><path d="M434 122 L440 112 L446 122 M434 610 L440 620 L446 610" stroke="#f6c177" fill="none" stroke-width="1.5"/>
+        <text class="op-lbl" transform="translate(456 370) rotate(90)" text-anchor="middle">hauteur des ressauts</text>
+        ${[["débit (l/s)", 362, 250], ["qualité du rocher", 150, 420], ["GPS départ", 26, 170], ["temps de parcours", 150, 520]].map(([t, x, y]) => `<g class="op-badge" transform="translate(${x} ${y})"><rect x="0" y="-12" width="${t.length * 6.6 + 18}" height="24" rx="12"/><text x="9" y="0">${t}</text></g>`).join("")}
+      </g>
+      <g transform="translate(300 330)"><g id="op-topo" opacity="0">
+        <rect width="196" height="250" rx="10" fill="#f1ede3"/><text x="16" y="30" fill="#1b2420" font-family="Space Grotesk, sans-serif" font-weight="700" font-size="17">TOPO</text>
+        <text x="16" y="48" fill="#5d6b65" font-size="10.5">parcours ouvert · juin 2027</text>
+        <line x1="40" y1="68" x2="40" y2="228" stroke="#1b2420" stroke-width="2"/>
+        ${[["Accès", 72], ["Rappel", 108], ["Relais", 140], ["Rappel", 172], ["Échappatoire", 200], ["Retour", 228]].map(([t, y]) => `<circle cx="40" cy="${y}" r="4" fill="#f08a5d"/><line x1="48" y1="${y}" x2="180" y2="${y}" stroke="#c9c2b2" stroke-dasharray="2 3"/><text x="56" y="${y - 4}" fill="#1b2420" font-size="11">${t}</text>`).join("")}
+      </g></g>`;
+    gsap.to(".op-ripple", { attr: { rx: 70, ry: 10 }, opacity: 0, duration: 1.8, repeat: -1, ease: "power1.out" });
+    const sight = $("#op-sight"), sl = sight.getTotalLength();
+    gsap.set(sight, { strokeDasharray: `${sl}`, strokeDashoffset: sl });
+    const c = { y: TOP };
+    const moveClimber = () => { $("#op-climber").setAttribute("transform", `translate(${RX} ${c.y})`); $("#op-rope").setAttribute("y2", c.y); };
+    const bounds = [0, 0.16, 0.34, 0.66, 0.83, 1];
+    const steps = $$("#op-steps li");
+    steps.forEach((li, i) => (li.dataset.n = i + 1));
+    const setStep = (p) => {
+      let k = bounds.findIndex((b, i) => p >= b && p < (bounds[i + 1] ?? 2));
+      k = Math.min(4, Math.max(0, k));
+      steps.forEach((li, i) => { li.classList.toggle("on", i === k); li.classList.toggle("done", i < k); });
+      gsap.set(".op-progress i", { scaleX: p });
+    };
+    setStep(0);
+    const D3 = 3.4, t3 = 3.4;
+    const tl = gsap.timeline({ defaults: { ease: "none" }, scrollTrigger: { trigger: ".opening", start: "top top", end: () => "+=" + innerHeight * 3.4, pin: ".op-pin", scrub: 0.6, onUpdate: (st) => setStep(st.progress) } });
+    tl.to("#op-team", { opacity: 1, duration: 0.5 }, 0.1)
+      .to(sight, { opacity: 1, duration: 0.1 }, 0.2).to(sight, { strokeDashoffset: 0, duration: 1.2 }, 0.2)
+      .to(sight, { opacity: 0, duration: 0.4 }, 1.7)
+      .to("#op-a0", { opacity: 1, duration: 0.3 }, 1.9).from("#op-a0 circle", { attr: { r: 0 }, duration: 0.4, ease: "back.out(3)" }, 1.9)
+      .to("#op-spark", { opacity: 1, duration: 0.1, repeat: 5, yoyo: true }, 2.0)
+      .to("#op-climber", { opacity: 1, duration: 0.4 }, 2.6)
+      .to(c, { y: BOT, duration: D3, onUpdate: moveClimber }, t3);
+    relays.slice(1).forEach((y, i) => tl.to(`#op-a${i + 1}`, { opacity: 1, duration: 0.25 }, t3 + (D3 * (y - TOP)) / (BOT - TOP) - 0.15));
+    tl.to("#op-measure", { opacity: 1, duration: 0.3 }, 6.9)
+      .from("#op-measure line", { attr: { y2: 112 }, duration: 0.7 }, 6.9)
+      .from("#op-measure .op-badge", { opacity: 0, scale: 0.6, transformOrigin: "0% 50%", stagger: 0.18, duration: 0.3, ease: "back.out(2)" }, 7.2)
+      .to("#op-measure", { opacity: 0.25, duration: 0.4 }, 8.5)
+      .fromTo("#op-topo", { opacity: 0, x: 60, rotate: 6 }, { opacity: 1, x: 0, rotate: -3, duration: 0.8, ease: "power2.out", transformOrigin: "50% 50%" }, 8.6)
+      .to({}, { duration: 0.6 });
+  }
+
+  /* ---------------- le trajet : Paris → Colombo → Uva ---------------- */
+  const toRad = (d) => (d * Math.PI) / 180, toDeg = (r) => (r * 180) / Math.PI;
+  function greatCircle([lo1, la1], [lo2, la2], n) {
+    const v = (lo, la) => [Math.cos(toRad(la)) * Math.cos(toRad(lo)), Math.cos(toRad(la)) * Math.sin(toRad(lo)), Math.sin(toRad(la))];
+    const a = v(lo1, la1), b = v(lo2, la2);
+    const w = Math.acos(a[0] * b[0] + a[1] * b[1] + a[2] * b[2]);
+    return Array.from({ length: n + 1 }, (_, i) => {
+      const t = i / n, k1 = Math.sin((1 - t) * w) / Math.sin(w), k2 = Math.sin(t * w) / Math.sin(w);
+      const p = [k1 * a[0] + k2 * b[0], k1 * a[1] + k2 * b[1], k1 * a[2] + k2 * b[2]];
+      return [toDeg(Math.atan2(p[1], p[0])), toDeg(Math.asin(p[2]))];
+    });
+  }
+  const haversine = ([lo1, la1], [lo2, la2]) => {
+    const d = Math.sin(toRad(la2 - la1) / 2) ** 2 + Math.cos(toRad(la1)) * Math.cos(toRad(la2)) * Math.sin(toRad(lo2 - lo1) / 2) ** 2;
+    return 6371 * 2 * Math.asin(Math.sqrt(d));
+  };
+  const bearingDeg = ([lo1, la1], [lo2, la2]) => {
+    const y = Math.sin(toRad(lo2 - lo1)) * Math.cos(toRad(la2));
+    const x = Math.cos(toRad(la1)) * Math.sin(toRad(la2)) - Math.sin(toRad(la1)) * Math.cos(toRad(la2)) * Math.cos(toRad(lo2 - lo1));
+    return (toDeg(Math.atan2(y, x)) + 360) % 360;
+  };
+  function initTrip() {
+    const CDG = [2.55, 49.01], CMB = [79.884, 7.18];
+    const arc = greatCircle(CDG, CMB, 200), KM = haversine(CDG, CMB);
+    const VAN = [CMB, [80.2, 7.25], [80.635, 7.291]];
+    const legs = $$("#trip-legs li");
+    const map = new maplibregl.Map({ container: "trip-map", style: mapStyle({ globe: true, terrain: false }), center: [30, 32], zoom: 1.5, interactive: false, attributionControl: false, fadeDuration: 0 });
+    const plane = new maplibregl.Marker({ element: h('<div><svg class="plane" viewBox="0 0 24 24"><path fill="currentColor" d="M21 16v-2l-8-5V3.5a1.5 1.5 0 0 0-3 0V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5z"/></svg></div>'), rotationAlignment: "map" });
+    const pin = (t, c, anchor = "bottom") => new maplibregl.Marker({ element: h(`<div><div class="trip-pin">${t}</div></div>`), anchor }).setLngLat(c);
+    const slPins = [pin("Kandy", [80.635, 7.291]), pin("Ella", [81.046, 6.874]), pin("Badulla", [81.056, 6.989])];
+    let tl = null;
+    const grad = (p) => (p <= 0 ? ["interpolate", ["linear"], ["line-progress"], 0, "rgba(0,0,0,0)", 1, "rgba(0,0,0,0)"] : ["step", ["line-progress"], "#f6c177", Math.min(p, 0.9999), "rgba(0,0,0,0)"]);
+    function play() {
+      tl?.kill();
+      legs.forEach((l) => l.classList.remove("on"));
+      slPins.forEach((m) => m.remove());
+      ["van", "train"].forEach((id) => map.setPaintProperty(id, "line-opacity", 0));
+      map.setPaintProperty("arc", "line-gradient", grad(0));
+      map.jumpTo({ center: [30, 32], zoom: 1.5, pitch: 0, bearing: 0 });
+      plane.setLngLat(CDG).addTo(map);
+      $("#trip-km").textContent = "0";
+      const pr = { v: 0 }, op = { van: 0, train: 0 };
+      tl = gsap.timeline()
+        .call(() => legs[0].classList.add("on"))
+        .to(pr, { v: 1, duration: 6, ease: "power1.inOut", onUpdate: () => {
+          const i = Math.min(arc.length - 2, Math.floor(pr.v * (arc.length - 1)));
+          plane.setLngLat(arc[i]).setRotation(bearingDeg(arc[i], arc[i + 1]));
+          map.setPaintProperty("arc", "line-gradient", grad(pr.v));
+          map.jumpTo({ center: [lerp(30, 72, pr.v), lerp(32, 14, pr.v)], zoom: lerp(1.5, 2.3, pr.v) });
+          $("#trip-km").textContent = fmt(KM * pr.v);
+        } })
+        .call(() => { plane.remove(); legs[1].classList.add("on"); map.flyTo({ center: [80.65, 7.1], zoom: 7.7, pitch: 30, duration: 3200, essential: true }); })
+        .to(op, { van: 1, duration: 1, delay: 2.6, onUpdate: () => map.setPaintProperty("van", "line-opacity", op.van) })
+        .call(() => { legs[2].classList.add("on"); slPins.forEach((m) => m.addTo(map)); })
+        .to(op, { train: 1, duration: 1, onUpdate: () => map.setPaintProperty("train", "line-opacity", op.train) });
+    }
+    map.on("load", () => {
+      map.addSource("arc", { type: "geojson", lineMetrics: true, data: { type: "Feature", geometry: { type: "LineString", coordinates: arc } } });
+      map.addLayer({ id: "arc", type: "line", source: "arc", layout: { "line-cap": "round" }, paint: { "line-width": 3, "line-gradient": grad(0) } });
+      map.addSource("van", { type: "geojson", data: { type: "Feature", geometry: { type: "LineString", coordinates: VAN } } });
+      map.addLayer({ id: "van", type: "line", source: "van", paint: { "line-color": "#f08a5d", "line-width": 3, "line-opacity": 0, "line-dasharray": [1, 1.2] } });
+      map.addSource("train", { type: "geojson", data: { type: "Feature", geometry: { type: "LineString", coordinates: D.trainLine } } });
+      map.addLayer({ id: "train", type: "line", source: "train", paint: { "line-color": "#3fd0b0", "line-width": 3, "line-opacity": 0, "line-dasharray": [2, 1] } });
+      pin("Paris", CDG).addTo(map);
+      pin("Colombo", CMB, "top").addTo(map);
+      ScrollTrigger.create({ trigger: ".trip", start: "top 70%", once: true, onEnter: play });
+      $("#trip-replay").addEventListener("click", play);
+    });
+  }
+
+  /* ---------------- mini-carte 3D des fiches ---------------- */
+  let dm = null, dmRaf = 0;
+  function killMiniMap() { cancelAnimationFrame(dmRaf); dm?.remove(); dm = null; }
+  function miniMap(o) {
+    killMiniMap();
+    const el = $("#dr-map");
+    if (!el) return;
+    dm = new maplibregl.Map({ container: el, style: mapStyle(), center: o.coord, zoom: 12.7, pitch: 64, bearing: -30, maxPitch: 80, interactive: false, attributionControl: false, fadeDuration: 0 });
+    new maplibregl.Marker({ element: h(`<div><div class="mk mk-obj p${o.prio} active" style="--c:${prioColor(o.prio)}">${o.n}</div></div>`) }).setLngLat(o.coord).addTo(dm);
+    let b = -30;
+    const spin = () => { if (!dm) return; b += 0.05; dm.setBearing(b); dmRaf = requestAnimationFrame(spin); };
+    dm.on("load", () => { if (!reduce) dmRaf = requestAnimationFrame(spin); });
+  }
 
   /* ---------------- planning timeline ---------------- */
   function renderTimeline() {
@@ -575,11 +788,14 @@
   rainChart();
   renderMapPanel();
   renderObjectiveCards();
+  renderFalls();
+  renderOpening();
   renderTimeline();
   renderBudget();
   renderRest();
   initHero();
   heroIntro();
-  document.fonts.ready.then(() => { reveals(); ScrollTrigger.refresh(); });
+  document.fonts.ready.then(() => { reveals(); ScrollTrigger.sort(); ScrollTrigger.refresh(); });
+  ScrollTrigger.create({ trigger: ".trip", start: "top bottom+=600", once: true, onEnter: initTrip });
   ScrollTrigger.create({ trigger: "#carte", start: "top bottom+=900", once: true, onEnter: initMap });
 })();
