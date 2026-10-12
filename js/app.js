@@ -16,12 +16,23 @@
   lenis.on("scroll", ScrollTrigger.update);
   gsap.ticker.add((t) => lenis.raf(t * 1000));
   gsap.ticker.lagSmoothing(0);
+  // Depuis l'accueil, on passe toujours par la plongée sur l'Uva avant d'aller à la section visée
+  const heroEnd = () => { const hs = $(".hero-scroll"); return hs.offsetTop + hs.offsetHeight - innerHeight; };
+  const easeInOut = (t) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
+  function dive(target) {
+    const end = heroEnd();
+    const next = () => target && setTimeout(() => lenis.scrollTo(target, { duration: 1.6 }), 500);
+    if (scrollY < end - 20) lenis.scrollTo(end, { duration: reduce ? 0.01 : 5, easing: easeInOut, lock: true, onComplete: next });
+    else next();
+  }
   $$('a[href^="#"]').forEach((a) => a.addEventListener("click", (e) => {
     const target = a.getAttribute("href");
     if (target.length < 2) return;
     e.preventDefault();
+    if (a.closest(".hero-content")) return dive(target);
     lenis.scrollTo(target === "#top" ? 0 : target, { duration: 1.6 });
   }));
+  $(".scroll-cue").addEventListener("click", () => dive());
 
   /* ---------------- nav + progress ---------------- */
   const nav = $(".topnav");

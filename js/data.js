@@ -46,7 +46,7 @@ window.EXPE = {
       pitch: "La Kirindi Oya dévale la gorge d'Ella, qui perd 1 000 m d'altitude sur 30 km jusqu'à Wellawaya. Kithal Ella, cachée au-dessus, et Ravana Ella, en trois ressauts, en marquent les temps forts.",
       base: "Ella", duration: "2 jours", permit: "Department of Wildlife Conservation (sanctuaire de Ravana Ella)",
       access: "Kithal Ella : 2,6 km par la voie ferrée depuis la gare d'Ella. Ravana Ella : bord de route A23.",
-      route: ["Reconnaissance du tronçon Kithal Ella → Ravana Ella", "Équipement d'un parcours « école » à 15 min d'Ella", "Calage du matériel et des protocoles de l'équipe en semaine 1"],
+      route: ["Reconnaissance du tronçon Kithal Ella → Ravana Ella", "Équipement d'un parcours « école » à 15 min d'Ella", "Calage de notre matériel et de nos protocoles en semaine 1"],
       watch: ["Ravana Ella est dans un sanctuaire : autorisation écrite obligatoire", "Route A23 très fréquentée au pied de la chute", "Débit faible en juin : idéal pour l'initiation"],
     },
     {
@@ -178,7 +178,7 @@ window.EXPE = {
     { name: "Léa", role: "Photographe & vidéaste", text: "Film de l'expédition, banque d'images, relevés photo pour les topos.", color: "#f6c177" },
     { name: "Carolyne", role: "Médecin", text: "Pharmacie d'expédition, protocoles de secours en canyon isolé, plan d'évacuation vers Badulla.", color: "#f08a5d" },
     { name: "Paul", role: "Logistique", text: "Transport, hébergement, permis, matériel.", color: "#4f8ef7" },
-    { name: "Fred", role: "Guide canyoning", text: "Ouvre les lignes, pose les ancrages, rédige les topos.", color: "#3fd0b0" },
+    { name: "Fred", role: "Guide canyoning", text: "Ouverture des lignes, pose des ancrages, rédaction des topos.", color: "#3fd0b0" },
   ],
 
   budget: {
