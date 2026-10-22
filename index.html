@@ -1,0 +1,350 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Sri Lanka Canyon 2027 — expédition d'exploration canyoning</title>
+  <meta name="description" content="2027 : un mois sur le terrain, 12 objectifs, les hautes terres de l'Uva. Exploration et ouverture de canyons au Sri Lanka.">
+  <meta name="robots" content="noindex, nofollow, noarchive, nosnippet, noimageindex">
+  <meta name="googlebot" content="noindex, nofollow, noarchive, nosnippet, noimageindex">
+  <meta name="bingbot" content="noindex, nofollow, noarchive, nosnippet">
+  <meta name="theme-color" content="#070b0a">
+  <meta property="og:title" content="Sri Lanka Canyon 2027">
+  <meta property="og:description" content="30 jours · 12 objectifs · les hautes terres de l'Uva">
+  <meta property="og:image" content="assets/img/ella-rock.jpg">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧗</text></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://unpkg.com/maplibre-gl@5.24.0/dist/maplibre-gl.css" rel="stylesheet">
+  <link href="css/style.css" rel="stylesheet">
+</head>
+<body>
+  <div class="grain" aria-hidden="true"></div>
+  <div class="scroll-progress" aria-hidden="true"><span></span></div>
+
+  <nav class="topnav">
+    <a href="#top" class="brand"><span class="brand-dot"></span>Sri Lanka Canyon 2027</a>
+    <div class="nav-links">
+      <a href="#saison">Saison</a>
+      <a href="#carte">Carte</a>
+      <a href="#objectifs">Objectifs</a>
+      <a href="#planning">Planning</a>
+      <a href="#budget">Budget</a>
+      <a href="#securite">Sécurité</a>
+      <a href="#equipe">Équipe</a>
+    </div>
+  </nav>
+
+  <!-- HERO : le globe plonge sur l'Uva au défilement -->
+  <header id="top" class="hero-scroll">
+    <div class="hero-sticky">
+      <div id="hero-map" class="hero-map" aria-hidden="true"></div>
+      <div class="hero-vignette" aria-hidden="true"></div>
+      <div class="hero-content">
+        <p class="eyebrow"><span class="pulse-dot"></span>Expédition d'exploration &amp; d'ouverture de canyons</p>
+        <h1 class="hero-title"><span class="ht-line"><span>Sri Lanka</span></span><span class="ht-line"><em>Canyon 2027</em></span></h1>
+        <p class="hero-sub">30 jours · 12 objectifs · les hautes terres de l'Uva</p>
+        <p class="hero-team">2027 · Fred · Léa · Carolyne · Paul</p>
+        <div class="hero-cta">
+          <a href="#carte" class="btn btn-primary">Explorer la carte</a>
+          <a href="#objectifs" class="btn btn-ghost">Les 12 objectifs</a>
+        </div>
+      </div>
+      <div class="hero-land" aria-hidden="true">
+        <p class="kicker">Destination</p>
+        <p class="hero-land-title">Les hautes terres de l'Uva</p>
+        <p class="hero-land-sub">Versant est du massif central · de Walapane à Koslanda</p>
+      </div>
+      <div class="hero-hud" aria-hidden="true">
+        <div><span class="hud-label">LAT</span><span id="hud-lat">—</span></div>
+        <div><span class="hud-label">LON</span><span id="hud-lon">—</span></div>
+        <div><span class="hud-label">ALT</span><span id="hud-alt">—</span></div>
+      </div>
+      <button class="scroll-cue" type="button"><span class="sc-mouse"><span></span></span><span class="sc-chev" aria-hidden="true"></span><span class="sc-text">Faites défiler pour plonger sur l'Uva</span></button>
+    </div>
+  </header>
+
+  <!-- PROJET -->
+  <section id="projet" class="section intro">
+    <div class="wrap">
+      <p class="kicker">Le projet</p>
+      <h2 class="reveal-title">Un mois pour explorer, équiper et documenter de nouveaux canyons.</h2>
+      <p class="lead reveal">En 2027, nous partons à quatre, pour un mois, dans les hautes terres du Sri Lanka, sur le versant est du massif central — une région où le canyoning n'existe pratiquement pas encore.</p>
+      <div class="stats">
+        <div class="stat"><span class="stat-num" data-count="30" data-suffix=" j">0</span><span class="stat-label">sur le terrain, en saison sèche</span></div>
+        <div class="stat"><span class="stat-num" data-count="12">0</span><span class="stat-label">objectifs dans 4 secteurs</span></div>
+        <div class="stat"><span class="stat-num" data-count="1090" data-suffix=" m">0</span><span class="stat-label">de chutes cumulées recensées</span></div>
+        <div class="stat"><span class="stat-num" data-count="4">0</span><span class="stat-label">équipiers</span></div>
+        <div class="stat"><span class="stat-num" data-count="16764" data-suffix=" €">0</span><span class="stat-label">budget prévisionnel, imprévus inclus</span></div>
+      </div>
+      <div class="goals" id="goals"></div>
+    </div>
+  </section>
+
+  <section class="why">
+    <div class="why-bg" style="background-image:url(assets/img/haputale.jpg)"></div>
+    <div class="wrap why-inner">
+      <p class="kicker">Pourquoi maintenant&nbsp;?</p>
+      <blockquote class="why-quote">Plus de <span class="why-num" data-count="465">0</span> cascades recensées au Sri Lanka, mais un canyoning limité à quelques sorties commerciales à Kitulgala.</blockquote>
+      <ul class="why-list">
+        <li>Offre commerciale concentrée à Kitulgala, sur le versant ouest : sorties courtes, sauts et toboggans.</li>
+        <li>Aucune base de topos publiée pour les hautes terres du centre-sud.</li>
+        <li>Des centaines de cascades inventoriées, quasiment aucune descendue en technique canyon.</li>
+      </ul>
+      <p class="photo-credit">Haputale · flashpacker-travelguide.de – CC BY-SA 2.0</p>
+    </div>
+  </section>
+
+  <!-- SAISON -->
+  <section id="saison" class="section">
+    <div class="wrap">
+      <p class="kicker">Le choix de la saison</p>
+      <h2 class="reveal-title">Pourquoi la saison sèche, pourquoi l'Uva</h2>
+      <div class="season-layout">
+        <div class="season-text reveal">
+          <p>La saison sèche côté Uva coïncide avec la mousson de l'autre versant. La mousson du sud-ouest (mai–septembre) se déverse sur le versant ouest, de Colombo à Kitulgala et Nuwara Eliya.</p>
+          <p>Le versant est est sous le vent : les vents de mousson franchissent les cols (Ohiya, Idalgashinna) déjà délestés de leur humidité. C'est l'<strong>ombre pluviométrique</strong> de l'Uva.</p>
+          <p>C'est aussi le creux d'activité de Mon Canyon en Guadeloupe : nous sommes disponibles un mois complet.</p>
+        </div>
+        <figure class="rain-shadow" id="rain-shadow" aria-label="Schéma de l'ombre pluviométrique">
+          <svg viewBox="0 0 640 300" role="img">
+            <defs>
+              <linearGradient id="mtn" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2d4a3f"/><stop offset="1" stop-color="#14231e"/></linearGradient>
+              <linearGradient id="westgrad" x1="0" x2="1"><stop offset="0" stop-color="#4f8ef7" stop-opacity=".35"/><stop offset="1" stop-color="#4f8ef7" stop-opacity="0"/></linearGradient>
+              <linearGradient id="eastgrad" x1="1" x2="0"><stop offset="0" stop-color="#f6c177" stop-opacity=".35"/><stop offset="1" stop-color="#f6c177" stop-opacity="0"/></linearGradient>
+            </defs>
+            <rect x="0" y="0" width="320" height="300" fill="url(#westgrad)"/>
+            <rect x="320" y="0" width="320" height="300" fill="url(#eastgrad)"/>
+            <g class="rs-wind">
+              <path d="M10 120 C 90 110, 150 115, 230 90" />
+              <path d="M10 160 C 100 150, 170 150, 250 120" />
+            </g>
+            <g class="rs-cloud" id="rs-cloud">
+              <ellipse cx="0" cy="0" rx="46" ry="20"/><ellipse cx="30" cy="-12" rx="30" ry="18"/><ellipse cx="-28" cy="-6" rx="26" ry="15"/>
+            </g>
+            <g class="rs-rain" id="rs-rain"></g>
+            <path class="rs-mtn" d="M0 300 L0 270 C 80 262, 150 240, 210 190 C 250 150, 280 80, 320 60 C 345 70, 370 110, 400 150 C 450 210, 540 250, 640 262 L640 300 Z" fill="url(#mtn)"/>
+            <g class="rs-sun"><circle cx="560" cy="70" r="20"/></g>
+            <text x="24" y="290" class="rs-lbl">Versant ouest · arrosé</text>
+            <text x="616" y="290" class="rs-lbl" text-anchor="end">Uva · ombre pluviométrique</text>
+            <text x="320" y="48" class="rs-lbl rs-peak" text-anchor="middle">cols Ohiya · Idalgashinna</text>
+            <text x="18" y="100" class="rs-lbl rs-small">Mousson SO →</text>
+          </svg>
+        </figure>
+      </div>
+      <div class="rain-chart reveal" id="rain-chart">
+        <div class="rc-head">
+          <p class="rc-title">Précipitations moyennes mensuelles à Badulla</p>
+          <p class="rc-big"><span data-count="40">0</span> mm par mois en saison sèche <span class="rc-vs">contre 190 mm en novembre</span></p>
+        </div>
+        <div class="rc-bars" id="rc-bars"></div>
+        <p class="rc-src">Source : WeatherSpark, moyennes climatiques de Badulla.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- CARTE -->
+  <section id="carte" class="section map-section">
+    <div class="map-layout">
+      <aside class="map-panel">
+        <p class="kicker">Carte interactive</p>
+        <h2>Quatre secteurs, douze objectifs</h2>
+        <div class="filters" id="sector-filters"></div>
+        <div class="prio-legend" id="prio-legend"></div>
+        <ul class="obj-list" id="obj-list"></ul>
+        <div class="obj-detail" id="obj-detail"></div>
+        <div class="map-actions">
+          <button class="btn btn-small" id="btn-plan"><span class="tour-icon">▶</span> Le mois en 4 bases</button>
+          <button class="btn btn-small btn-ghost" id="btn-overview">Vue d'ensemble</button>
+        </div>
+      </aside>
+      <div class="map-stage" data-lenis-prevent>
+        <div id="map"></div>
+        <div class="map-legend">
+          <span><i class="lg-p" style="--c:#4f8ef7"></i>P1</span>
+          <span><i class="lg-p" style="--c:#f08a5d"></i>P2</span>
+          <span><i class="lg-p" style="--c:#3fd0b0"></i>P3</span>
+          <span><i class="lg-sector"></i>Secteur</span>
+          <span><i class="lg-city"></i>Base</span>
+          <span><i class="lg-train"></i>Train Kandy–Badulla</span>
+        </div>
+        <div class="map-caption" id="map-caption"></div>
+        <div class="map-hint">Clic droit + glisser pour pivoter · molette pour zoomer</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- OBJECTIFS -->
+  <section id="objectifs" class="section">
+    <div class="wrap">
+      <p class="kicker">Vue d'ensemble</p>
+      <h2 class="reveal-title">Les douze objectifs</h2>
+      <div class="falls reveal" id="falls">
+        <div class="falls-head">
+          <p class="falls-title">Les chutes à l'échelle</p>
+          <p class="falls-big"><span data-count="1090" data-suffix=" m">0</span> cumulés <span class="falls-vs">soit 3,3 fois la tour Eiffel</span></p>
+        </div>
+        <div class="falls-scroll"><svg id="falls-svg" viewBox="0 0 1000 500" role="img" aria-label="Hauteur des chutes principales comparée à la tour Eiffel"></svg></div>
+        <p class="falls-note">Chute principale de chaque objectif · cliquez pour ouvrir la fiche · Nalini Ella et Ella Wala : hauteur à mesurer sur place.</p>
+      </div>
+      <p class="lead reveal">Cliquez sur une fiche pour le parcours envisagé, les accès, les autorisations et les points d'attention.</p>
+      <div class="obj-filters" id="obj-filters"></div>
+      <div class="obj-grid" id="obj-grid"></div>
+      <p class="fineprint">Altitude du point repère, lue sur un modèle numérique de terrain (≈ 75 m). « ~ » : position approximative, à confirmer sur le terrain.</p>
+    </div>
+  </section>
+
+  <!-- OUVRIR UN CANYON : scène pilotée par le défilement -->
+  <section id="ouverture" class="opening">
+    <div class="op-pin">
+      <div class="wrap op-grid">
+        <div class="op-text">
+          <p class="kicker">Ouvrir un canyon</p>
+          <h2>Anatomie d'une ouverture</h2>
+          <ol class="op-steps" id="op-steps">
+            <li><b>Repérer</b><p>Reconnaissance depuis le haut et depuis la berge : la ligne, les échappatoires, le débit.</p></li>
+            <li><b>Équiper</b><p>Pose des ancrages au perforateur — goujons, plaquettes, maillons. Environ 120 points prévus sur le mois.</p></li>
+            <li><b>Descendre</b><p>Rappels fractionnés : sur un grand mur comme Diyaluma, nous cherchons des relais intermédiaires dans la paroi.</p></li>
+            <li><b>Relever</b><p>Hauteur des ressauts, débit, qualité du rocher, temps de parcours, GPS départ et arrivée.</p></li>
+            <li><b>Transmettre</b><p>Un topo détaillé par parcours, remis à un partenaire local et partagé avec la communauté.</p></li>
+          </ol>
+          <div class="op-progress"><i></i></div>
+        </div>
+        <figure class="op-fig"><svg id="op-svg" viewBox="0 0 520 640" role="img" aria-label="Schéma d'une ouverture de canyon"></svg></figure>
+      </div>
+    </div>
+  </section>
+
+  <!-- PLANNING -->
+  <section id="planning" class="section">
+    <div class="banner" style="background-image:url(assets/img/nine-arch.jpg)"><span class="photo-credit">Nine Arch Bridge, Ella · erdbeernaut – CC BY-SA 2.0</span></div>
+    <div class="wrap">
+      <p class="kicker">Quatre semaines, quatre bases</p>
+      <h2 class="reveal-title">Planning</h2>
+      <p class="lead reveal">Nous démarrons au centre, à Ella, pour caler le matériel et les contacts, puis nous rayonnons vers les secteurs plus isolés une fois rodés. Nous gardons deux jours de marge météo dans le mois.</p>
+      <div class="timeline" id="timeline"></div>
+    </div>
+  </section>
+
+  <!-- BUDGET -->
+  <section id="budget" class="section">
+    <div class="wrap">
+      <p class="kicker">Combien ça coûte&nbsp;?</p>
+      <h2 class="reveal-title">Budget prévisionnel</h2>
+      <div class="budget-layout">
+        <div class="budget-totals">
+          <div class="bt"><span class="bt-num" data-count="16764" data-suffix=" €">0</span><span class="bt-label">total prévisionnel, imprévus inclus</span></div>
+          <div class="bt"><span class="bt-num" data-count="4191" data-suffix=" €">0</span><span class="bt-label">par équipier</span></div>
+          <div class="donut-wrap"><svg class="donut" id="donut" viewBox="0 0 200 200"></svg><div class="donut-center" id="donut-center"><b>16 764 €</b><span>7 postes</span></div></div>
+        </div>
+        <div class="budget-bars" id="budget-bars"></div>
+      </div>
+      <p class="fineprint" id="budget-note"></p>
+    </div>
+  </section>
+
+  <!-- SECURITE -->
+  <section id="securite" class="section">
+    <div class="wrap">
+      <p class="kicker">Préparer l'imprévu</p>
+      <h2 class="reveal-title">Sécurité &amp; risques</h2>
+      <p class="lead reveal">Le principal risque n'est pas la météo mais l'état du terrain après le cyclone Ditwah (fin novembre 2025), qui a fortement touché le district de Badulla. Chaque accès sera confirmé par un contact local avant le départ.</p>
+      <div class="risk-grid" id="risk-grid"></div>
+    </div>
+    <div class="quote-band">
+      <div class="quote-bg" style="background-image:url(assets/img/sinharaja.jpg)"></div>
+      <div class="wrap">
+        <blockquote class="big-quote">« Un canyon isolé, c'est un hôpital à plusieurs heures. Nous partons avec une pharmacie d'expédition, des protocoles écrits et un plan d'évacuation pour chaque sortie. »</blockquote>
+        <p class="quote-author">Carolyne, médecin de l'expédition</p>
+        <p class="photo-credit">Sous-bois humide (Sinharaja) · Lakpura LLC – CC BY 2.0</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- EQUIPE -->
+  <section id="equipe" class="section">
+    <div class="wrap">
+      <p class="kicker">Qui part&nbsp;?</p>
+      <h2 class="reveal-title">L'équipe</h2>
+      <div class="team-grid" id="team-grid"></div>
+    </div>
+  </section>
+
+  <!-- LOGISTIQUE + SOUTIEN -->
+  <section id="logistique" class="section">
+    <div class="wrap">
+      <p class="kicker">En pratique</p>
+      <h2 class="reveal-title">Logistique</h2>
+      <div class="trip">
+        <div class="trip-stage" data-lenis-prevent><div id="trip-map"></div></div>
+        <div class="trip-info">
+          <p class="kicker">Le trajet</p>
+          <p class="trip-km"><span id="trip-km">0</span> km</p>
+          <ol class="trip-legs" id="trip-legs">
+            <li><i class="tl-plane"></i><div><b>Paris → Colombo</b><span>Vol A/R, ≈ 700 € avec bagage matériel</span></div></li>
+            <li><i class="tl-van"></i><div><b>Colombo → hautes terres</b><span>Van avec chauffeur, 4 personnes + matériel</span></div></li>
+            <li><i class="tl-train"></i><div><b>Kandy → Ella → Badulla</b><span>Train entre les bases</span></div></li>
+          </ol>
+          <button class="btn btn-small" id="trip-replay">↺ Rejouer le trajet</button>
+          <p class="fineprint">Tracés indicatifs.</p>
+        </div>
+      </div>
+      <div class="logi-grid" id="logi-grid"></div>
+    </div>
+  </section>
+
+  <section id="soutenir" class="section support">
+    <div class="support-bg" style="background-image:url(assets/img/ella-rock.jpg)"></div>
+    <div class="wrap">
+      <p class="kicker">Nous soutenir</p>
+      <h2 class="reveal-title">Embarquez avec nous</h2>
+      <p class="lead reveal">Votre soutien finance le matériel d'équipement, la sécurité et la production d'images. En échange, votre marque voyage avec nous.</p>
+      <div class="support-grid">
+        <div class="sp"><span class="sp-k">Marques outdoor</span><b>Matériel</b><p>Logo sur le matériel et dans le film, tests terrain, retours d'usage détaillés.</p></div>
+        <div class="sp"><span class="sp-k">Médias &amp; tourisme</span><b>Images</b><p>Banque photo et vidéo de Léa, carnet de bord en ligne, sujets exclusifs.</p></div>
+        <div class="sp"><span class="sp-k">Acteurs locaux</span><b>Terrain</b><p>Topos complets des parcours ouverts, formation des guides, remise des données.</p></div>
+      </div>
+      <a class="contact-card" href="https://moncanyon.com" target="_blank" rel="noopener">
+        <span class="sp-k">Contact</span>
+        <b>Mon Canyon – Canyoning en Guadeloupe</b>
+        <span>Basse-Terre, Guadeloupe · moncanyon.com ↗</span>
+      </a>
+      <p class="photo-credit">Ella Rock · World of Travolution360 – CC BY-SA 2.0</p>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="wrap footer-grid">
+      <div>
+        <p class="kicker">Données &amp; sources</p>
+        <ul id="sources"></ul>
+        <p class="footnote">Les hauteurs de chutes, altitudes et coordonnées approximatives sont des données de préparation, à vérifier sur le terrain. Le budget est une estimation à affiner avec les devis.</p>
+      </div>
+      <div>
+        <p class="kicker">Photographies</p>
+        <ul id="credits"></ul>
+        <p class="footnote">Carte : MapLibre GL · imagerie Esri · relief AWS Terrain Tiles</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Fiche objectif -->
+  <div class="drawer" id="drawer" aria-hidden="true">
+    <div class="drawer-backdrop" data-close></div>
+    <article class="drawer-panel" role="dialog" aria-modal="true" data-lenis-prevent>
+      <button class="drawer-close" data-close aria-label="Fermer">✕</button>
+      <div class="drawer-body" id="drawer-body"></div>
+    </article>
+  </div>
+
+  <script src="https://unpkg.com/maplibre-gl@5.24.0/dist/maplibre-gl.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/gsap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/ScrollTrigger.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/SplitText.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/Flip.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/lenis@1.3.26/dist/lenis.min.js"></script>
+  <script src="js/data.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
